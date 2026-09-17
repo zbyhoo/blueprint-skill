@@ -1,14 +1,24 @@
-# plan-skill
+# blueprint-skill
 
 Two [Agent Skills](https://agentskills.io/specification) for turning an idea
-into a written implementation plan, and then executing that plan
+into a written implementation blueprint, and then executing that blueprint
 task-by-task — working the same way in **Claude Code** and **Codex CLI**.
 
-- `skills/plan` — a critical, question-by-question interview to understand
-  what you're building, followed by a bite-sized, verifiable implementation
-  plan saved to `docs/plans/YYYY-MM-DD-<feature>.md`.
-- `skills/execute-plan` — loads a saved plan, reviews it critically, then
-  executes it task by task with a verification checkpoint after every step.
+- `skills/blueprint` — a critical, question-by-question interview to
+  understand what you're building, followed by a bite-sized, verifiable
+  blueprint saved to `docs/blueprints/YYYY-MM-DD-<feature>.md`.
+- `skills/execute-blueprint` — loads a saved blueprint, reviews it
+  critically, then executes it task by task with a verification checkpoint
+  after every step.
+
+## Why not "plan"?
+
+The skill (and this repo) used to be named `plan`. That collided with two
+things it needs to coexist with: Claude Code's own plan mode, and the
+`--plan` flags several coding tools already use for their own planning
+step. An agent (or a human skimming skill names) can't tell "plan" the
+skill apart from "plan" the built-in mode by name alone, so it renamed
+itself out of the collision entirely. "Blueprint" doesn't shadow anything.
 
 ## Where this comes from
 
@@ -27,8 +37,8 @@ Requires `bash`. Clone this repo somewhere permanent (the skills are
 symlinked from where you clone it, not copied), then run:
 
 ```bash
-git clone <this-repo-url> ~/projects/plan-skill
-cd ~/projects/plan-skill
+git clone git@github.com:zbyhoo/blueprint-skill.git ~/projects/blueprint-skill
+cd ~/projects/blueprint-skill
 ./install.sh
 ```
 
@@ -57,50 +67,51 @@ created (never a conflicting file it declined to touch).
 
 `.claude-plugin/plugin.json` lets you install this repo as a Claude Code
 plugin instead (`/plugin marketplace add <this-repo-url>` /
-local-path add, then `/plugin install plan-skill`). `skills/` remains the
-single source of truth either way — the plugin manifest doesn't duplicate
-skill content.
+local-path add, then `/plugin install blueprint-skill`). `skills/` remains
+the single source of truth either way — the plugin manifest doesn't
+duplicate skill content.
 
 ## Usage
 
 Just ask, in either tool:
 
-> "Plan a small feature: add a `--verbose` flag to the CLI."
+> "Blueprint this feature: add a `--verbose` flag to the CLI."
 
-The `plan` skill will ask clarifying questions one at a time, push back on
-weak approaches instead of agreeing by default, and present 2-3 trade-off
-options with a recommendation before writing anything to disk. Once you
-approve the design, it writes the plan to `docs/plans/`.
+The `blueprint` skill will ask clarifying questions one at a time, push
+back on weak approaches instead of agreeing by default, and present 2-3
+trade-off options with a recommendation before writing anything to disk.
+Once you approve the design, it writes the blueprint to `docs/blueprints/`.
 
-> "Execute the plan at docs/plans/2026-01-15-verbose-flag.md"
+> "Execute the blueprint at docs/blueprints/2026-01-15-verbose-flag.md"
 
-The `execute-plan` skill reviews the plan, then works through it task by
-task, running each step's verification command before moving on, and stops
-to ask if something doesn't check out.
+The `execute-blueprint` skill reviews the blueprint, then works through it
+task by task, running each step's verification command before moving on,
+and stops to ask if something doesn't check out.
 
 ## Verifying the Codex install manually
 
 `codex exec` (non-interactive) does not expose a way to force-load a skill
 from a test harness — the `$<skill>` invocation syntax only works in the
 interactive TUI, and pointing a temporary `CODEX_HOME`'s `config.toml` at
-`skills/plan/SKILL.md` via `[[skills.config]]` did not make a plain
+`skills/blueprint/SKILL.md` via `[[skills.config]]` did not make a plain
 one-shot `codex exec` prompt pick it up (skill discovery/search appears to
 be an interactive-session behavior). To verify the Codex side yourself:
 
-1. Run `./install.sh` so `~/.codex/skills/plan` and
-   `~/.codex/skills/execute-plan` exist.
+1. Run `./install.sh` so `~/.codex/skills/blueprint` and
+   `~/.codex/skills/execute-blueprint` exist.
 2. Start an interactive `codex` session in any repo.
-3. Type `$plan` to open the skill autocomplete and confirm `plan` (and
-   separately `execute-plan`) appear and load.
-4. Send a prompt like "plan a small feature: add a --verbose flag", and
+3. Type `$blueprint` to open the skill autocomplete and confirm
+   `blueprint` (and separately `execute-blueprint`) appear and load.
+4. Send a prompt like "blueprint this feature: add a --verbose flag", and
    confirm Codex asks a clarifying question instead of jumping straight to
-   a plan.
+   a blueprint.
 
 ## Configuration
 
-- **Plan location:** defaults to `docs/plans/YYYY-MM-DD-<feature>.md`. Tell
-  the assistant a different path earlier in the conversation (e.g. "save
-  plans to `specs/`") and it will use that instead — this is a convention
-  in the skill's instructions, not a config file.
+- **Blueprint location:** defaults to
+  `docs/blueprints/YYYY-MM-DD-<feature>.md`. Tell the assistant a different
+  path earlier in the conversation (e.g. "save blueprints to `specs/`")
+  and it will use that instead — this is a convention in the skill's
+  instructions, not a config file.
 - **Language:** skill instructions are written in English for portability,
   but both skills tell the assistant to respond in the user's own language.

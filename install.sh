@@ -38,7 +38,7 @@ CODEX_SKILLS_DIR="$CODEX_HOME_DIR/skills"
 
 link_one() {
   local target_dir="$1"   # e.g. ~/.claude/skills
-  local name="$2"         # e.g. plan
+  local name="$2"         # e.g. blueprint
   local source_dir="$SKILLS_DIR/$name"
   local link_path="$target_dir/$name"
 

@@ -1,6 +1,6 @@
 {
-  "name": "plan-skill",
-  "description": "Brainstorm -> plan -> execute skills for Claude Code and Codex.",
+  "name": "blueprint-skill",
+  "description": "Brainstorm -> blueprint -> execute skills for Claude Code and Codex.",
   "version": "0.1.0",
   "author": {
     "name": "Zbigniew Kominek"

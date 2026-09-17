@@ -1,24 +1,25 @@
 ---
-name: plan
-description: Use before writing any new feature, subsystem, or non-trivial change - runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step implementation plan. Use when the user asks to "plan", "design", or "spec out" something, or before touching code for any multi-step task.
+name: blueprint
+description: Use before writing any new feature, subsystem, or non-trivial change - runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step blueprint. Use when the user asks to "blueprint this feature", "draw up a blueprint", or "spec out" something, or before touching code for any multi-step task.
 ---
 
-# Plan: Brainstorm Into a Written Implementation Plan
+# Blueprint: Brainstorm Into a Written Implementation Blueprint
 
-Turn an idea into a concrete, reviewable implementation plan through two
-phases in the same conversation: first understand and design, then write
-the plan. Respond in the user's language throughout, but keep any saved
-plan file in English so it stays portable across tools and teammates.
+Turn an idea into a concrete, reviewable blueprint through two phases in
+the same conversation: first understand and design, then write the
+blueprint. Respond in the user's language throughout, but keep any saved
+blueprint file in English so it stays portable across tools and teammates.
 
 Do not write implementation code or scaffold a project until Phase 2 has
-produced a saved plan the user has approved (or asked you to proceed on).
+produced a saved blueprint the user has approved (or asked you to proceed
+on).
 
 ## Phase 1: Understand and Design
 
 **Assess scope first.** If the request bundles multiple independent pieces
 (e.g. "build chat, billing, and analytics"), say so immediately and help
-split it into separate plans - one per independent piece - before going
-deeper on any one of them.
+split it into separate blueprints - one per independent piece - before
+going deeper on any one of them.
 
 **Ask one question at a time.** Prefer multiple-choice when it fits, but
 open questions are fine. Never bundle two questions in one message; if a
@@ -38,8 +39,8 @@ this phase:
 - If you are unsure whether an approach will work, say that you're unsure
   and propose a cheap way to check, rather than agreeing by default.
 - Agreement should follow from the analysis, not from politeness. The
-  goal is a plan that survives contact with reality, not a comfortable
-  conversation.
+  goal is a blueprint that survives contact with reality, not a
+  comfortable conversation.
 
 **Explore the codebase as you go.** Check existing files, docs, and recent
 history for the area you're changing. Follow established patterns; call
@@ -57,20 +58,20 @@ well-defined interface over large units that do many things.
 Move to Phase 2 once the user has approved the design (explicitly, or by
 telling you to proceed).
 
-## Phase 2: Write the Plan
+## Phase 2: Write the Blueprint
 
-Write the plan assuming its executor has zero context on this codebase and
-average judgment: it must be possible to follow the plan without having
-sat in on Phase 1.
+Write the blueprint assuming its executor has zero context on this
+codebase and average judgment: it must be possible to follow the
+blueprint without having sat in on Phase 1.
 
-**Save location:** `docs/plans/YYYY-MM-DD-<feature-name>.md`, using today's
-date and a short kebab-case feature name. If the user names a different
-location earlier in the conversation, use that instead.
+**Save location:** `docs/blueprints/YYYY-MM-DD-<feature-name>.md`, using
+today's date and a short kebab-case feature name. If the user names a
+different location earlier in the conversation, use that instead.
 
-**Plan header** - every plan starts with:
+**Blueprint header** - every blueprint starts with:
 
 ```markdown
-# <Feature Name> Implementation Plan
+# <Feature Name> Blueprint
 
 **Goal:** <one sentence>
 **Approach:** <2-3 sentences on the overall strategy>
@@ -78,8 +79,8 @@ location earlier in the conversation, use that instead.
 
 ## How to Execute
 Work through the tasks below in order. If your environment provides an
-"execute-plan" skill or equivalent, use it; otherwise follow each task's
-steps and verification commands directly.
+"execute-blueprint" skill or equivalent, use it; otherwise follow each
+task's steps and verification commands directly.
 ```
 
 **File map before tasks:** list every file to be created or modified and
@@ -137,12 +138,12 @@ edge cases", "write tests for the above", or "similar to Task N" without
 repeating the actual content. A reader working from one task alone must
 have everything they need.
 
-**Self-review before saving.** Check the plan against the design from
+**Self-review before saving.** Check the blueprint against the design from
 Phase 1: does every requirement map to a task? Search for placeholder
 language and fix it. Check that names, signatures, and types used in later
 tasks match what earlier tasks defined. Fix issues inline; no need for a
 second pass.
 
-**When you're done:** tell the user where the plan was saved and that
-execution can proceed with the execute-plan skill (if their environment
-has it) or by following the plan's tasks directly.
+**When you're done:** tell the user where the blueprint was saved and that
+execution can proceed with the execute-blueprint skill (if their
+environment has it) or by following the blueprint's tasks directly.
