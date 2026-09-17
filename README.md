@@ -1,3 +1,106 @@
 # plan-skill
 
-Planning skill for Claude Code and Codex (brainstorm -> plan -> execute), extracted and adapted from the superpowers plugin.
+Two [Agent Skills](https://agentskills.io/specification) for turning an idea
+into a written implementation plan, and then executing that plan
+task-by-task — working the same way in **Claude Code** and **Codex CLI**.
+
+- `skills/plan` — a critical, question-by-question interview to understand
+  what you're building, followed by a bite-sized, verifiable implementation
+  plan saved to `docs/plans/YYYY-MM-DD-<feature>.md`.
+- `skills/execute-plan` — loads a saved plan, reviews it critically, then
+  executes it task by task with a verification checkpoint after every step.
+
+## Where this comes from
+
+The planning mechanics are extracted and adapted from the `brainstorming`,
+`writing-plans`, and `executing-plans` skills of the
+[superpowers](https://github.com/obra/superpowers) plugin by Jesse Vincent
+(obra), MIT licensed. Everything else in superpowers (TDD workflow, code
+review, git worktree management, subagent-driven development, etc.) is
+intentionally left out — this repo is just the planning loop, made
+harness-agnostic so it works outside Claude Code too. See `LICENSE` for the
+full attribution and license text.
+
+## Install
+
+Requires `bash`. Clone this repo somewhere permanent (the skills are
+symlinked from where you clone it, not copied), then run:
+
+```bash
+git clone <this-repo-url> ~/projects/plan-skill
+cd ~/projects/plan-skill
+./install.sh
+```
+
+This creates a symlink for each skill under `skills/` into both:
+- `~/.claude/skills/<name>` (Claude Code)
+- `~/.codex/skills/<name>` (Codex CLI — `~/.agents/skills/<name>` also works
+  as a cross-runtime alias if your Codex setup uses that instead; symlink it
+  there yourself if so)
+
+Set `CODEX_HOME` before running if your Codex config lives somewhere other
+than `~/.codex`.
+
+Re-running `install.sh` is safe (idempotent) — it recognizes its own
+existing symlinks and leaves them alone. It will refuse to touch a
+conflicting file or symlink unless you pass `--force`. Use `--dry-run` to
+preview changes, and `--uninstall` to remove only the symlinks this script
+created (never a conflicting file it declined to touch).
+
+```bash
+./install.sh --dry-run       # preview
+./install.sh --force         # overwrite conflicting targets
+./install.sh --uninstall     # remove this repo's symlinks
+```
+
+### As a Claude Code plugin
+
+`.claude-plugin/plugin.json` lets you install this repo as a Claude Code
+plugin instead (`/plugin marketplace add <this-repo-url>` /
+local-path add, then `/plugin install plan-skill`). `skills/` remains the
+single source of truth either way — the plugin manifest doesn't duplicate
+skill content.
+
+## Usage
+
+Just ask, in either tool:
+
+> "Plan a small feature: add a `--verbose` flag to the CLI."
+
+The `plan` skill will ask clarifying questions one at a time, push back on
+weak approaches instead of agreeing by default, and present 2-3 trade-off
+options with a recommendation before writing anything to disk. Once you
+approve the design, it writes the plan to `docs/plans/`.
+
+> "Execute the plan at docs/plans/2026-01-15-verbose-flag.md"
+
+The `execute-plan` skill reviews the plan, then works through it task by
+task, running each step's verification command before moving on, and stops
+to ask if something doesn't check out.
+
+## Verifying the Codex install manually
+
+`codex exec` (non-interactive) does not expose a way to force-load a skill
+from a test harness — the `$<skill>` invocation syntax only works in the
+interactive TUI, and pointing a temporary `CODEX_HOME`'s `config.toml` at
+`skills/plan/SKILL.md` via `[[skills.config]]` did not make a plain
+one-shot `codex exec` prompt pick it up (skill discovery/search appears to
+be an interactive-session behavior). To verify the Codex side yourself:
+
+1. Run `./install.sh` so `~/.codex/skills/plan` and
+   `~/.codex/skills/execute-plan` exist.
+2. Start an interactive `codex` session in any repo.
+3. Type `$plan` to open the skill autocomplete and confirm `plan` (and
+   separately `execute-plan`) appear and load.
+4. Send a prompt like "plan a small feature: add a --verbose flag", and
+   confirm Codex asks a clarifying question instead of jumping straight to
+   a plan.
+
+## Configuration
+
+- **Plan location:** defaults to `docs/plans/YYYY-MM-DD-<feature>.md`. Tell
+  the assistant a different path earlier in the conversation (e.g. "save
+  plans to `specs/`") and it will use that instead — this is a convention
+  in the skill's instructions, not a config file.
+- **Language:** skill instructions are written in English for portability,
+  but both skills tell the assistant to respond in the user's own language.
