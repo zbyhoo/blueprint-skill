@@ -1,0 +1,20 @@
+{
+  "name": "blueprint-skill",
+  "interface": {
+    "displayName": "Blueprint Skill"
+  },
+  "plugins": [
+    {
+      "name": "blueprint-skill",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "blueprint-skill",
+  "version": "0.1.0",
+  "description": "Brainstorm -> blueprint -> execute skills for Codex: interview, write a step-by-step blueprint, then execute it task by task with verification.",
+  "author": {
+    "name": "Zbigniew Kominek"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/zbyhoo/blueprint-skill",
+  "keywords": ["planning", "blueprint", "brainstorm", "skills"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Blueprint",
+    "shortDescription": "Brainstorm -> blueprint -> execute",
+    "category": "Developer Tools"
+  }
+}

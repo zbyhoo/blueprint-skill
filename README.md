@@ -1,8 +1,17 @@
 # blueprint-skill
 
-Two [Agent Skills](https://agentskills.io/specification) for turning an idea
-into a written implementation blueprint, and then executing that blueprint
-task-by-task — working the same way in **Claude Code** and **Codex CLI**.
+Two [Agent Skills](https://agentskills.io/specification) that turn an idea
+into a written implementation blueprint and then execute that blueprint
+task by task. They work the same way in **Claude Code** and **Codex CLI**.
+
+> **Based on [superpowers](https://github.com/obra/superpowers)** by Jesse
+> Vincent (obra). The planning mechanics here are extracted and adapted
+> from its `brainstorming`, `writing-plans`, and `executing-plans` skills,
+> used under the MIT License. Everything else in superpowers (TDD workflow,
+> code review, git worktrees, subagent-driven development, ...) is
+> intentionally left out: this repo is only the planning loop, made
+> harness-agnostic so it also runs outside Claude Code. See `LICENSE` for
+> the full attribution.
 
 - `skills/blueprint` — a critical, question-by-question interview to
   understand what you're building, followed by a bite-sized, verifiable
@@ -11,65 +20,69 @@ task-by-task — working the same way in **Claude Code** and **Codex CLI**.
   critically, then executes it task by task with a verification checkpoint
   after every step.
 
-## Why not "plan"?
-
-The skill (and this repo) used to be named `plan`. That collided with two
-things it needs to coexist with: Claude Code's own plan mode, and the
-`--plan` flags several coding tools already use for their own planning
-step. An agent (or a human skimming skill names) can't tell "plan" the
-skill apart from "plan" the built-in mode by name alone, so it renamed
-itself out of the collision entirely. "Blueprint" doesn't shadow anything.
-
-## Where this comes from
-
-The planning mechanics are extracted and adapted from the `brainstorming`,
-`writing-plans`, and `executing-plans` skills of the
-[superpowers](https://github.com/obra/superpowers) plugin by Jesse Vincent
-(obra), MIT licensed. Everything else in superpowers (TDD workflow, code
-review, git worktree management, subagent-driven development, etc.) is
-intentionally left out — this repo is just the planning loop, made
-harness-agnostic so it works outside Claude Code too. See `LICENSE` for the
-full attribution and license text.
+Why "blueprint" and not "plan"? The name `plan` collides with Claude Code's
+built-in plan mode and with the `--plan` flags of several coding tools, so
+neither an agent nor a human skimming skill names could tell them apart.
+"Blueprint" doesn't shadow anything.
 
 ## Install
 
-Requires `bash`. Clone this repo somewhere permanent (the skills are
-symlinked from where you clone it, not copied), then run:
+### As a plugin (recommended)
+
+The repo is its own single-plugin marketplace for both tools, so no clone is
+needed.
+
+Claude Code:
+
+```
+/plugin marketplace add zbyhoo/blueprint-skill
+/plugin install blueprint-skill@blueprint-skill
+```
+
+Codex CLI:
 
 ```bash
-git clone git@github.com:zbyhoo/blueprint-skill.git ~/projects/blueprint-skill
-cd ~/projects/blueprint-skill
+codex plugin marketplace add zbyhoo/blueprint-skill
+codex plugin add blueprint-skill@blueprint-skill
+```
+
+Plugin installs copy a snapshot of the skills. To pick up a new version run
+`/plugin marketplace update blueprint-skill` (Claude Code) or
+`codex plugin marketplace upgrade` (Codex).
+
+Manifests live in `.claude-plugin/` (Claude Code) and `.codex-plugin/` +
+`.agents/plugins/` (Codex). `skills/` is the single source of truth; the
+manifests don't duplicate skill content.
+
+### From a clone (symlinks, for hacking on the skills)
+
+Requires `bash`. Clone the repo somewhere permanent (the skills are
+symlinked from the clone, not copied), then run:
+
+```bash
+git clone https://github.com/zbyhoo/blueprint-skill.git
+cd blueprint-skill
 ./install.sh
 ```
 
-This creates a symlink for each skill under `skills/` into both:
+This symlinks each skill under `skills/` into both:
 - `~/.claude/skills/<name>` (Claude Code)
-- `~/.codex/skills/<name>` (Codex CLI — `~/.agents/skills/<name>` also works
-  as a cross-runtime alias if your Codex setup uses that instead; symlink it
-  there yourself if so)
+- `~/.codex/skills/<name>` (Codex CLI; set `CODEX_HOME` first if your Codex
+  config lives elsewhere)
 
-Set `CODEX_HOME` before running if your Codex config lives somewhere other
-than `~/.codex`.
-
-Re-running `install.sh` is safe (idempotent) — it recognizes its own
-existing symlinks and leaves them alone. It will refuse to touch a
-conflicting file or symlink unless you pass `--force`. Use `--dry-run` to
-preview changes, and `--uninstall` to remove only the symlinks this script
-created (never a conflicting file it declined to touch).
+Re-running `install.sh` is safe: it recognizes its own symlinks and leaves
+them alone, and refuses to touch a conflicting file or symlink unless you
+pass `--force`.
 
 ```bash
 ./install.sh --dry-run       # preview
 ./install.sh --force         # overwrite conflicting targets
-./install.sh --uninstall     # remove this repo's symlinks
+./install.sh --uninstall     # remove only this repo's symlinks
 ```
 
-### As a Claude Code plugin
-
-`.claude-plugin/plugin.json` lets you install this repo as a Claude Code
-plugin instead (`/plugin marketplace add <this-repo-url>` /
-local-path add, then `/plugin install blueprint-skill`). `skills/` remains
-the single source of truth either way — the plugin manifest doesn't
-duplicate skill content.
+To check the install, start a new session and ask "blueprint this feature:
+...". In Codex you can also type `$blueprint` to see the skill in the
+autocomplete.
 
 ## Usage
 
@@ -77,8 +90,8 @@ Just ask, in either tool:
 
 > "Blueprint this feature: add a `--verbose` flag to the CLI."
 
-The `blueprint` skill will ask clarifying questions one at a time, push
-back on weak approaches instead of agreeing by default, and present 2-3
+The `blueprint` skill asks clarifying questions one at a time, pushes back
+on weak approaches instead of agreeing by default, and presents 2-3
 trade-off options with a recommendation before writing anything to disk.
 Once you approve the design, it writes the blueprint to `docs/blueprints/`.
 
@@ -95,35 +108,21 @@ trade-off, or what to do about a blocker) through the built-in
 `AskUserQuestion` picker: an option per choice, each with a short label
 and a description carrying the trade-off, the recommended option listed
 first. In Codex and other harnesses without that picker, the same
-question falls back to plain text — the options listed in the message,
-with a stated recommendation — so the interview behaves the same either
+question falls back to plain text (the options listed in the message,
+with a stated recommendation), so the interview behaves the same either
 way, just rendered differently. Open-ended questions (no fixed set of
 options) are always plain text, in both tools.
-
-## Verifying the Codex install manually
-
-`codex exec` (non-interactive) does not expose a way to force-load a skill
-from a test harness — the `$<skill>` invocation syntax only works in the
-interactive TUI, and pointing a temporary `CODEX_HOME`'s `config.toml` at
-`skills/blueprint/SKILL.md` via `[[skills.config]]` did not make a plain
-one-shot `codex exec` prompt pick it up (skill discovery/search appears to
-be an interactive-session behavior). To verify the Codex side yourself:
-
-1. Run `./install.sh` so `~/.codex/skills/blueprint` and
-   `~/.codex/skills/execute-blueprint` exist.
-2. Start an interactive `codex` session in any repo.
-3. Type `$blueprint` to open the skill autocomplete and confirm
-   `blueprint` (and separately `execute-blueprint`) appear and load.
-4. Send a prompt like "blueprint this feature: add a --verbose flag", and
-   confirm Codex asks a clarifying question instead of jumping straight to
-   a blueprint.
 
 ## Configuration
 
 - **Blueprint location:** defaults to
   `docs/blueprints/YYYY-MM-DD-<feature>.md`. Tell the assistant a different
   path earlier in the conversation (e.g. "save blueprints to `specs/`")
-  and it will use that instead — this is a convention in the skill's
+  and it will use that instead. This is a convention in the skill's
   instructions, not a config file.
 - **Language:** skill instructions are written in English for portability,
   but both skills tell the assistant to respond in the user's own language.
+
+## License
+
+MIT. See `LICENSE`, which also carries the attribution to superpowers.

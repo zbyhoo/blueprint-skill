@@ -1,0 +1,25 @@
+{
+  "name": "blueprint-skill",
+  "owner": {
+    "name": "Zbigniew Kominek",
+    "url": "https://github.com/zbyhoo"
+  },
+  "metadata": {
+    "description": "Brainstorm -> blueprint -> execute planning skills for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "blueprint-skill",
+      "source": "./",
+      "description": "Brainstorm -> blueprint -> execute skills: interview, write a step-by-step blueprint, then execute it task by task with verification.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Zbigniew Kominek"
+      },
+      "license": "MIT",
+      "repository": "https://github.com/zbyhoo/blueprint-skill",
+      "keywords": ["planning", "blueprint", "brainstorm", "skills"]
+    }
+  ]
+}
