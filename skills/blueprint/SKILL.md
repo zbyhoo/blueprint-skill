@@ -27,6 +27,31 @@ topic needs more digging, split it across turns. Focus questions on
 purpose, constraints, and success criteria - not on details you could
 infer by reading the code.
 
+**How to ask a multiple-choice question.** If your environment provides an
+`AskUserQuestion` tool (or an equivalent interactive picker), use it for
+every multiple-choice question in this phase instead of typing the choices
+into your message:
+- Write each option's `label` as a short name and put the reasoning,
+  trade-offs, or consequences in its `description` - don't duplicate that
+  detail in the surrounding message.
+- Order options with the one you recommend first, and mark it in its label
+  or description (e.g. "(recommended)") when you have a real
+  recommendation per the "Be critical, not agreeable" rule below. Don't
+  fabricate a recommendation just to fill this slot - it's fine to leave
+  options unranked when you're genuinely neutral.
+- Still only ask one question per tool call; don't stack unrelated
+  questions into one multi-select just because the tool allows several.
+- Open (non-multiple-choice) questions still go directly in your message
+  text, since a picker doesn't fit free-form answers.
+
+If no such tool is available in your environment (e.g. Codex and other
+harnesses without an interactive picker), fall back to plain text: list
+the options as a short numbered or lettered list in your message, state
+which one you recommend and why, and let the user reply in the
+conversation. Both paths must ask the same question with the same
+options - the fallback is a rendering difference, not a different
+interview.
+
 **Be critical, not agreeable.** This is the most important behavior in
 this phase:
 - Evaluate the user's stated approach on its merits. If it has a real

@@ -49,6 +49,20 @@ Report exactly what you tried and what happened, then ask for direction.
 Don't guess past a blocker and don't silently change the blueprint's
 approach.
 
+**How to ask.** When the direction you need boils down to a short list of
+concrete options (e.g. "retry the step", "skip this task", "stop and
+revise the blueprint"), and your environment provides an
+`AskUserQuestion` tool (or an equivalent interactive picker), use it: give
+each option a short label and put the trade-off or consequence in its
+description, ordered with the option you'd recommend first. If no such
+tool is available in your environment (e.g. Codex and other harnesses
+without an interactive picker), fall back to plain text: list the options
+in your message, say which one you recommend and why, and let the user
+reply in the conversation. Use the same fallback for step 1.3's "raise
+them with the user" when the gap reduces to a similar short list of
+choices; an open-ended question (no fixed set of options) always goes
+directly in your message text either way.
+
 ## When to Go Back
 
 Return to Step 1 (re-review) if the user changes the blueprint

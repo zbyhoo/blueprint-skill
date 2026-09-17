@@ -88,6 +88,18 @@ The `execute-blueprint` skill reviews the blueprint, then works through it
 task by task, running each step's verification command before moving on,
 and stops to ask if something doesn't check out.
 
+### Multiple-choice questions
+
+In Claude Code, both skills ask multiple-choice questions (a design
+trade-off, or what to do about a blocker) through the built-in
+`AskUserQuestion` picker: an option per choice, each with a short label
+and a description carrying the trade-off, the recommended option listed
+first. In Codex and other harnesses without that picker, the same
+question falls back to plain text — the options listed in the message,
+with a stated recommendation — so the interview behaves the same either
+way, just rendered differently. Open-ended questions (no fixed set of
+options) are always plain text, in both tools.
+
 ## Verifying the Codex install manually
 
 `codex exec` (non-interactive) does not expose a way to force-load a skill
