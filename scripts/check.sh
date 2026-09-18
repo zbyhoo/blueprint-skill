@@ -237,6 +237,19 @@ check_install_syntax() {
   fi
 }
 
+check_install_test() {
+  if [ ! -x tests/install_test.sh ]; then
+    fail "install.sh regression test: tests/install_test.sh not found or not executable"
+    return
+  fi
+  local out
+  if out="$(tests/install_test.sh 2>&1)"; then
+    pass "install.sh regression test (tests/install_test.sh)"
+  else
+    fail "install.sh regression test: $(printf '%s\n' "$out" | grep -v '^PASS: ')"
+  fi
+}
+
 check_claude_validate() {
   if ! command -v claude >/dev/null 2>&1; then
     skip "claude plugin validate (claude not on PATH)"
@@ -263,7 +276,7 @@ check_shellcheck() {
   local f
   while IFS= read -r f; do
     scripts+=("$f")
-  done < <(find scripts -maxdepth 1 -type f -name '*.sh' | sort)
+  done < <(find scripts tests -maxdepth 1 -type f -name '*.sh' | sort)
 
   local out rc=0
   out="$(shellcheck "${scripts[@]}" 2>&1)" || rc=$?
@@ -280,6 +293,7 @@ CHECKS=(
   check_names
   check_frontmatter
   check_install_syntax
+  check_install_test
   check_claude_validate
   check_shellcheck
 )
