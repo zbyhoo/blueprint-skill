@@ -4,14 +4,15 @@ Two [Agent Skills](https://agentskills.io/specification) that turn an idea
 into a written implementation blueprint and then execute that blueprint
 task by task. They work the same way in **Claude Code** and **Codex CLI**.
 
-> **Based on [superpowers](https://github.com/obra/superpowers)** by Jesse
-> Vincent (obra). The planning mechanics here are extracted and adapted
-> from its `brainstorming`, `writing-plans`, and `executing-plans` skills,
-> used under the MIT License. Everything else in superpowers (TDD workflow,
-> code review, git worktrees, subagent-driven development, ...) is
-> intentionally left out: this repo is only the planning loop, made
-> harness-agnostic so it also runs outside Claude Code. See `LICENSE` for
-> the full attribution.
+> **Based on [superpowers](https://github.com/obra/superpowers) v6.3.0**
+> (commit `b36e082`, 2026-08-12) by Jesse Vincent (obra). The planning
+> mechanics here are extracted and adapted from its `brainstorming`,
+> `writing-plans`, and `executing-plans` skills, used under the MIT
+> License. Everything else in superpowers (TDD workflow, code review, git
+> worktrees, subagent-driven development, ...) is intentionally left out:
+> this repo is only the planning loop, made harness-agnostic so it also
+> runs outside Claude Code. See `LICENSE`, which carries both copyright
+> notices.
 
 - `skills/blueprint` — a critical, question-by-question interview to
   understand what you're building, followed by a bite-sized, verifiable
@@ -125,4 +126,4 @@ options) are always plain text, in both tools.
 
 ## License
 
-MIT. See `LICENSE`, which also carries the attribution to superpowers.
+MIT. See `LICENSE`, which includes the superpowers copyright notice.
