@@ -67,8 +67,6 @@ link_one() {
     return
   fi
 
-  mkdir -p "$target_dir"
-
   if [ -L "$link_path" ]; then
     local current_target
     current_target="$(cd "$(dirname "$link_path")" && readlink "$link_path" || true)"
@@ -96,6 +94,7 @@ link_one() {
     return
   fi
 
+  mkdir -p "$target_dir"
   if [ -e "$link_path" ] || [ -L "$link_path" ]; then
     rm -rf "$link_path"
   fi
