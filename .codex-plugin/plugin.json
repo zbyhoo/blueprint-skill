@@ -1,6 +1,6 @@
 {
   "name": "blueprint-skill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Brainstorm -> blueprint -> execute skills for Codex: interview, write a step-by-step blueprint, then execute it task by task with verification.",
   "author": {
     "name": "Zbigniew Kominek"

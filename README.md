@@ -28,6 +28,9 @@ neither an agent nor a human skimming skill names could tell them apart.
 
 ## Install
 
+Use either the plugin install or `install.sh`, not both. Using both
+registers every skill twice.
+
 ### As a plugin (recommended)
 
 The repo is its own single-plugin marketplace for both tools, so no clone is
@@ -70,6 +73,10 @@ This symlinks each skill under `skills/` into both:
 - `~/.claude/skills/<name>` (Claude Code)
 - `~/.codex/skills/<name>` (Codex CLI; set `CODEX_HOME` first if your Codex
   config lives elsewhere)
+
+Symlinked skills follow the clone's working tree (`git pull` in the clone
+updates them). Plugin installs are cached by version and only update when
+the version is bumped.
 
 Re-running `install.sh` is safe: it recognizes its own symlinks and leaves
 them alone, and refuses to touch a conflicting file or symlink unless you
@@ -123,6 +130,29 @@ options) are always plain text, in both tools.
   instructions, not a config file.
 - **Language:** skill instructions are written in English for portability,
   but both skills tell the assistant to respond in the user's own language.
+
+## Development
+
+### Checks
+
+Run `./scripts/check.sh` before every commit. It checks that plugin JSON
+parses, the four version fields agree and look like X.Y.Z, plugin names
+are `blueprint-skill`, each `skills/*/SKILL.md` has valid frontmatter,
+and `install.sh` is syntactically valid; `claude plugin validate` and
+shellcheck run when those tools are on PATH.
+
+### Versioning and releases
+
+The version lives in four fields: `.claude-plugin/plugin.json` `.version`,
+`.claude-plugin/marketplace.json` `.metadata.version` and
+`.plugins[0].version`, and `.codex-plugin/plugin.json` `.version`. Any
+commit that changes files under `skills/` or a plugin manifest bumps the
+patch version in all four fields in that same commit (main is the release
+channel for both marketplaces, and plugin installs are cached by version,
+so an unbumped change never reaches plugin users). Bigger or
+behaviour-changing releases also get a git tag created with
+`claude plugin tag` (format `blueprint-skill--vX.Y.Z`). `check.sh`
+enforces that the four fields agree.
 
 ## License
 

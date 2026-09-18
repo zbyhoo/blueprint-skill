@@ -1,9 +1,12 @@
 {
   "name": "blueprint-skill",
   "description": "Brainstorm -> blueprint -> execute skills for Claude Code and Codex.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Zbigniew Kominek"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "https://github.com/zbyhoo/blueprint-skill",
+  "homepage": "https://github.com/zbyhoo/blueprint-skill",
+  "keywords": ["planning", "blueprint", "brainstorm", "skills"]
 }
