@@ -154,6 +154,44 @@ behaviour-changing releases also get a git tag created with
 `claude plugin tag` (format `blueprint-skill--vX.Y.Z`). `check.sh`
 enforces that the four fields agree.
 
+### Evals
+
+`evals/` holds a small behavioural suite for Claude Code's
+`claude plugin eval`, one directory per case (`prompt.md` plus
+`graders/*.md`). It is run manually, not in CI. The cases check that:
+
+- "Blueprint this feature: ..." loads the `blueprint` skill, the first reply
+  asks exactly one question, and no files are written.
+- An ordinary coding request ("add a --verbose flag to cli.py") does not load
+  the skill.
+- A design trade-off is asked as a multiple-choice question with the
+  recommended option first (through the `AskUserQuestion` picker or the
+  plain-text fallback).
+- No implementation code or scaffolding is written before a blueprint is
+  approved, even when the user says to start coding.
+- When the design is already agreed, the blueprint is saved as
+  `docs/blueprints/YYYY-MM-DD-<name>.md` with the Goal/Approach header, a
+  file map, tasks that each end in a verification command, and no
+  placeholder language.
+- `execute-blueprint` stops and asks when a step's verification fails,
+  instead of improvising a fix.
+
+Run it from the repo root:
+
+```bash
+claude plugin eval . --runs 1 --no-publish
+```
+
+Every run spends Claude quota: each case is a full Claude Code session, the
+LLM graders call a judge model (haiku by default; `--judge-model` changes
+it), and by default each case also runs a second time without the plugin as
+a baseline, where the "skill was used" checks are reported but not scored.
+Add `--ablation none` to skip the baseline (half the cost), or
+`--case <glob>` / `--tag <tag>` to run a subset. The first run in a
+directory asks you to confirm that you trust the plugin; answer it yourself
+rather than scripting `--trust-plugin`. Results and the HTML report go to
+`evals/results/`, which is git-ignored.
+
 ## License
 
 MIT. See `LICENSE`, which includes the superpowers copyright notice.
