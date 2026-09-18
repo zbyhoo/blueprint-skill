@@ -94,6 +94,8 @@ autocomplete.
 
 ## Usage
 
+The blueprint skill only runs when you ask for it explicitly; it never starts on its own for ordinary coding tasks.
+
 Just ask, in either tool:
 
 > "Blueprint this feature: add a `--verbose` flag to the CLI."

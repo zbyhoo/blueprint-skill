@@ -1,6 +1,6 @@
 ---
 name: blueprint
-description: Use before writing any new feature, subsystem, or non-trivial change - runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step blueprint. Use when the user asks to "blueprint this feature", "draw up a blueprint", or "spec out" something, or before touching code for any multi-step task.
+description: Runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step blueprint saved under docs/blueprints/. Use only when the user explicitly asks to "blueprint this feature", "draw up a blueprint", "spec out" something, or names the blueprint skill directly - never start this on your own initiative for an ordinary coding task, even a multi-step one.
 ---
 
 # Blueprint: Brainstorm Into a Written Implementation Blueprint
