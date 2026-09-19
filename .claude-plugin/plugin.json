@@ -1,7 +1,7 @@
 {
   "name": "blueprint-skill",
-  "description": "Brainstorm -> blueprint -> execute skills for Claude Code and Codex.",
-  "version": "0.1.2",
+  "description": "Brainstorm -> blueprint -> execute skills for Claude Code and Codex, plus an unattended auto-blueprint that records its assumptions.",
+  "version": "0.2.0",
   "author": {
     "name": "Zbigniew Kominek"
   },

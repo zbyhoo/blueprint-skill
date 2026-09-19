@@ -7,7 +7,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INSTALL="$REPO_DIR/install.sh"
-SKILLS=(blueprint execute-blueprint)
+SKILLS=(blueprint execute-blueprint auto-blueprint)
 
 TMP_ROOT="$(mktemp -d)"
 TMP_ROOT="$(cd "$TMP_ROOT" && pwd -P)"
@@ -125,10 +125,10 @@ case_install_creates_links() {
   problems="$(links_problems "$T_HOME/.claude/skills" "$REPO_DIR")$(links_problems "$T_CODEX/skills" "$REPO_DIR")"
   n1="$(count_entries "$T_HOME/.claude/skills")"
   n2="$(count_entries "$T_CODEX/skills")"
-  if [ "$RC" -eq 0 ] && [ -z "$problems" ] && [ "$n1" -eq 2 ] && [ "$n2" -eq 2 ]; then
-    pass "install creates 4 symlinks to the repo's skills"
+  if [ "$RC" -eq 0 ] && [ -z "$problems" ] && [ "$n1" -eq "${#SKILLS[@]}" ] && [ "$n2" -eq "${#SKILLS[@]}" ]; then
+    pass "install creates one symlink per skill in both skills directories"
   else
-    fail "install creates 4 symlinks (rc=$RC, entries $n1+$n2): $problems $(output_one_line)"
+    fail "install creates one symlink per skill (rc=$RC, entries $n1+$n2): $problems $(output_one_line)"
   fi
 }
 
@@ -139,7 +139,7 @@ case_second_install_idempotent() {
   local count problems
   count="$(grep -c '^already linked: ' "$OUT" || true)"
   problems="$(links_problems "$T_HOME/.claude/skills" "$REPO_DIR")$(links_problems "$T_CODEX/skills" "$REPO_DIR")"
-  if [ "$RC" -eq 0 ] && [ "$count" -eq 4 ] && [ -z "$problems" ]; then
+  if [ "$RC" -eq 0 ] && [ "$count" -eq $((${#SKILLS[@]} * 2)) ] && [ -z "$problems" ]; then
     pass "second install is idempotent (already linked, exit 0)"
   else
     fail "second install is idempotent (rc=$RC, $count 'already linked'): $problems $(output_one_line)"
@@ -208,7 +208,9 @@ case_uninstall() {
   if [ "$RC" -eq 0 ] &&
     [ ! -e "$T_HOME/.claude/skills/blueprint" ] && [ ! -L "$T_HOME/.claude/skills/blueprint" ] &&
     [ ! -e "$T_HOME/.claude/skills/execute-blueprint" ] && [ ! -L "$T_HOME/.claude/skills/execute-blueprint" ] &&
+    [ ! -e "$T_HOME/.claude/skills/auto-blueprint" ] && [ ! -L "$T_HOME/.claude/skills/auto-blueprint" ] &&
     [ ! -e "$T_CODEX/skills/blueprint" ] && [ ! -L "$T_CODEX/skills/blueprint" ] &&
+    [ ! -e "$T_CODEX/skills/auto-blueprint" ] && [ ! -L "$T_CODEX/skills/auto-blueprint" ] &&
     [ -L "$T_CODEX/skills/execute-blueprint" ] &&
     [ "$(readlink "$T_CODEX/skills/execute-blueprint")" = "$other" ] && [ -d "$other" ]; then
     pass "--uninstall removes only this repo's symlinks"
@@ -253,7 +255,7 @@ case_repo_path_with_space() {
     return
   fi
   run_install "$copy/install.sh"
-  if [ "$RC" -ne 0 ] || [ "$(grep -c '^already linked: ' "$OUT" || true)" -ne 4 ]; then
+  if [ "$RC" -ne 0 ] || [ "$(grep -c '^already linked: ' "$OUT" || true)" -ne $((${#SKILLS[@]} * 2)) ]; then
     fail "repo path containing a space: re-install (rc=$RC): $(output_one_line)"
     return
   fi
