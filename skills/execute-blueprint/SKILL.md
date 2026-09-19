@@ -1,6 +1,6 @@
 ---
 name: execute-blueprint
-description: Use when you have a written blueprint (e.g. one produced by the blueprint skill, at docs/blueprints/*.md) to execute task by task with verification checkpoints. Use when the user says "execute the blueprint", "implement this blueprint", or points at a saved blueprint file.
+description: Use when you have a written blueprint (e.g. one produced by the blueprint or auto-blueprint skill, at docs/blueprints/*.md) to execute task by task with verification checkpoints. Use when the user says "execute the blueprint", "implement this blueprint", or points at a saved blueprint file.
 ---
 
 # Execute Blueprint: Run a Saved Blueprint Task by Task
@@ -20,7 +20,14 @@ but follow the blueprint's content (typically English) as written.
    before starting rather than guessing your way through - a blueprint
    that needs 30 seconds of clarification now saves far more time than
    discovering the gap mid-task.
-4. If the blueprint is workable, track the tasks (as a todo list,
+4. If the blueprint has an `**Origin:** auto-blueprint` line, its
+   interview answers were assumed by a model instead of given by a
+   person. When its "Review first" list is anything other than `None.`,
+   list those assumptions (question number, confidence, answer, affected
+   tasks) in your message before you start, then carry on. This is a
+   notice, not a blocker: don't wait for a reply, and don't treat the
+   assumptions as gaps under point 3.
+5. If the blueprint is workable, track the tasks (as a todo list,
    checkboxes in the blueprint file, or whatever tracking your
    environment supports) and proceed.
 
