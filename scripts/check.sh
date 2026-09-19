@@ -80,6 +80,26 @@ yaml_scalar() {
   '
 }
 
+# Print the blueprint-writing rules that skills/blueprint and
+# skills/auto-blueprint must share word for word: from the paragraph that
+# starts with "**File map before tasks:**" up to, but not including, the one
+# that starts with "**Self-review before saving.**". Fails if either anchor
+# is missing or they are out of order.
+extract_shared_format() {
+  awk '
+    {
+      sub(/\r$/, "")
+    }
+    index($0, "**File map before tasks:**") == 1 { inblock = 1; started = 1 }
+    index($0, "**Self-review before saving.**") == 1 {
+      if (inblock) ended = 1
+      inblock = 0
+    }
+    inblock { print }
+    END { if (!started || !ended) exit 1 }
+  ' "$1"
+}
+
 check_json() {
   if ! have_jq; then
     fail "jq required"
@@ -224,6 +244,29 @@ check_frontmatter() {
   fi
 }
 
+check_shared_format() {
+  local -a files=(skills/blueprint/SKILL.md skills/auto-blueprint/SKILL.md)
+  local -a blocks=()
+  local f block
+  for f in "${files[@]}"; do
+    if [ ! -f "$f" ]; then
+      fail "shared blueprint format: $f not found"
+      return
+    fi
+    if ! block="$(extract_shared_format "$f")"; then
+      fail "shared blueprint format: $f lacks the block from '**File map before tasks:**' to '**Self-review before saving.**'"
+      return
+    fi
+    blocks+=("$block")
+  done
+
+  if [ "${blocks[0]}" = "${blocks[1]}" ]; then
+    pass "shared blueprint format identical in ${files[*]}"
+  else
+    fail "shared blueprint format differs between ${files[*]}: the text from '**File map before tasks:**' up to '**Self-review before saving.**' must match word for word"
+  fi
+}
+
 check_install_syntax() {
   if [ ! -f install.sh ]; then
     fail "install.sh syntax: install.sh not found"
@@ -292,6 +335,7 @@ CHECKS=(
   check_versions
   check_names
   check_frontmatter
+  check_shared_format
   check_install_syntax
   check_install_test
   check_claude_validate
