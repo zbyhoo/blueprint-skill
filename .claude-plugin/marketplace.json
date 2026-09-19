@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Brainstorm -> blueprint -> execute planning skills for Claude Code, plus an unattended auto-blueprint that records its assumptions.",
-    "version": "0.2.0"
+    "version": "0.2.1"
   },
   "plugins": [
     {
       "name": "blueprint-skill",
       "source": "./",
       "description": "Brainstorm -> blueprint -> execute skills: interview (or an unattended auto-blueprint that records its assumptions), write a step-by-step blueprint, then execute it task by task with verification.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "author": {
         "name": "Zbigniew Kominek"
       },

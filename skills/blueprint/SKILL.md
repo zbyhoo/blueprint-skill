@@ -1,6 +1,6 @@
 ---
 name: blueprint
-description: Runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step blueprint saved under docs/blueprints/. Use only when the user explicitly asks to "blueprint this feature", "draw up a blueprint", "spec out" something, or names the blueprint skill directly - never start this on your own initiative for an ordinary coding task, even a multi-step one.
+description: Runs a critical question-by-question interview to pin down intent and constraints, then produces a written, step-by-step blueprint saved under docs/blueprints/. Use only when the user explicitly asks to "blueprint this feature", "draw up a blueprint", "spec out" something, or names the blueprint skill directly - never start this on your own initiative for an ordinary coding task, even a multi-step one. A request to produce the blueprint without questions (an "auto-blueprint", an "automatic blueprint", "don't ask me, decide yourself") belongs to the auto-blueprint skill, not this one.
 ---
 
 # Blueprint: Brainstorm Into a Written Implementation Blueprint
